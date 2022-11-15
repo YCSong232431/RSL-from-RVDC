@@ -1,3 +1,4 @@
+# run on sagemath
 # construct the easy instance of RSL from RVDC
 
 (q,m,n,k,t) = (2,31,26,13,8)
