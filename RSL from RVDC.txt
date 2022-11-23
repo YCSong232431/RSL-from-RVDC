@@ -46,3 +46,46 @@ print(vector_matrix(vector(vPP*randomPP),k).rank() == vector_matrix(vector(rando
 
 # check that vPP = R(list(v)) does not change support 
 print(vector_matrix(vector(vPP*randomPP),k).row_space() == vector_matrix(vector(randomPP),k).row_space())
+
+# constructing instance of RSD
+e_vector = random_small_vec_gen(Fqm,n,t)
+e1 = R([e_vector[i] for i in range(0,k)])
+e2 = R([e_vector[i] for i in range(k,n)])
+h =  R.random_element()
+s = e1 + h * e2
+
+chal = random_vector(GF(q),k)
+R_chal = R(list(chal))
+print(s * R_chal == e1 * R_chal + h * e2 * R_chal)
+
+# constructing instance of RSL
+# collect challenges
+eta = n*t
+R_chal_list = []
+for i in range(eta):
+    chal = random_vector(GF(q),k)
+    R_chal = R(list(chal))
+    R_chal_list.append(R_chal) 
+#print(len(R_chal_list))
+
+# matrix from eta syndromes 
+s_list = [s * R_chal_list[i] for i in range(eta)]
+S_matrix = matrix(eta,k,[list(s_list[i]) for i in range(eta)]).transpose()
+# print(len(s_list))
+
+# matrix from eta (e1*cha)
+e1_list = [e1 * R_chal_list[i] for i in range(eta)]
+E1_matrix = matrix(eta,k,[list(e1_list[i]) for i in range(eta)]).transpose()
+
+# matrix from eta (e2*cha)
+e2_list = [e2 * R_chal_list[i] for i in range(eta)]
+E2_matrix = matrix(eta,k,[list(e2_list[i]) for i in range(eta)]).transpose()
+
+# check supp(E) = supp(e_vector)
+E_matrix = block_matrix(2,1,[E1_matrix,E2_matrix])
+vec_E_matrix = vector(E_matrix)
+F =  matrix(Fqm.base_ring(),eta*n,m,[vector(vec_E_matrix[j]) for j in range(eta*n)]).row_space()
+print(F == vector_matrix(e_vector,n).row_space())
+
+H = block_matrix(1,2,[identity_matrix(k),circulant_matrix(h).transpose()])
+print(H * E_matrix == S_matrix)
