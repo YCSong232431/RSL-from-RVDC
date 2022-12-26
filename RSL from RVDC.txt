@@ -88,4 +88,4 @@ F =  matrix(Fqm.base_ring(),eta*n,m,[vector(vec_E_matrix[j]) for j in range(eta*
 print(F == vector_matrix(e_vector,n).row_space())
 
 H = block_matrix(1,2,[identity_matrix(k),circulant_matrix(h).transpose()])
-print(H * E_matrix == S_matrix)     #  The easy instance of RSL consist of H,E_matrix,and S_matrix
+print(H * E_matrix == S_matrix)     #  The easy instance of RSL consists of H,E_matrix,and S_matrix
